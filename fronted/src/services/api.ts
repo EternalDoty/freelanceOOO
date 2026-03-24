@@ -9,8 +9,23 @@ const api = axios.create({
   },
 });
 
+const getStoredToken = (): string | null => {
+  const directToken = localStorage.getItem('token');
+  if (directToken) return directToken;
+
+  const authStorageRaw = localStorage.getItem('auth-storage');
+  if (!authStorageRaw) return null;
+
+  try {
+    const parsed = JSON.parse(authStorageRaw);
+    return parsed?.state?.token || null;
+  } catch {
+    return null;
+  }
+};
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getStoredToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -36,7 +51,7 @@ export const authApi = {
 export const tasksApi = {
   getAll: (params?: Record<string, string>) => api.get('/tasks', { params }),
   getById: (id: string) => api.get(`/tasks/${id}`),
-  create: ( any) => api.post('/tasks', data),
+  create: (data: Record<string, unknown>) => api.post('/tasks', data),
   submitProposal: (taskId: string, data: any) => api.post(`/tasks/${taskId}/proposals`, data),
   acceptProposal: (taskId: string, proposalId: string) => 
     api.post(`/tasks/${taskId}/proposals/${proposalId}/accept`),
@@ -54,14 +69,14 @@ export const escrowApi = {
 };
 
 export const appealsApi = {
-  create: ( any) => api.post('/appeals', data),
+  create: (data: Record<string, unknown>) => api.post('/appeals', data),
   getMy: () => api.get('/appeals/my'),
   getAll: (params?: Record<string, string>) => api.get('/appeals', { params }),
   review: (id: string, data: any) => api.post(`/appeals/${id}/review`, data),
 };
 
 export const supportApi = {
-  createTicket: ( any) => api.post('/support/tickets', data),
+  createTicket: (data: Record<string, unknown>) => api.post('/support/tickets', data),
   sendMessage: (ticketId: string, message: string) => 
     api.post(`/support/tickets/${ticketId}/messages`, { message }),
   getMyTickets: () => api.get('/support/tickets/my'),

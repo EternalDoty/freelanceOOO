@@ -88,7 +88,7 @@ const AuthCallbackPage: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+const AppRoutes: React.FC = () => {
   const { login, logout, token } = useAuthStore();
   const location = useLocation();
 
@@ -108,49 +108,55 @@ const App: React.FC = () => {
   }, [login, logout, token, location.pathname]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/auth/callback" element={<AuthCallbackPage />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <TasksFeed />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/tasks" element={
+    <>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route
+          path="/"
+          element={
             <ProtectedRoute>
               <TasksFeed />
             </ProtectedRoute>
-          } />
-          <Route path="/tasks/:id" element={
-            <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50">Task Detail Page</div>
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50">Profile Page</div>
-            </ProtectedRoute>
-          } />
-          <Route path="/support" element={
-            <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50">Support Page</div>
-            </ProtectedRoute>
-          } />
-          <Route path="/appeals" element={
-            <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50">Appeals Page</div>
-            </ProtectedRoute>
-          } />
-        </Routes>
-        <Toaster position="top-right" />
-      </BrowserRouter>
-    </QueryClientProvider>
+          }
+        />
+        <Route path="/tasks" element={
+          <ProtectedRoute>
+            <TasksFeed />
+          </ProtectedRoute>
+        } />
+        <Route path="/tasks/:id" element={
+          <ProtectedRoute>
+            <div className="min-h-screen bg-gray-50">Task Detail Page</div>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <div className="min-h-screen bg-gray-50">Profile Page</div>
+          </ProtectedRoute>
+        } />
+        <Route path="/support" element={
+          <ProtectedRoute>
+            <div className="min-h-screen bg-gray-50">Support Page</div>
+          </ProtectedRoute>
+        } />
+        <Route path="/appeals" element={
+          <ProtectedRoute>
+            <div className="min-h-screen bg-gray-50">Appeals Page</div>
+          </ProtectedRoute>
+        } />
+      </Routes>
+      <Toaster position="top-right" />
+    </>
   );
 };
+
+const App: React.FC = () => (
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  </QueryClientProvider>
+);
 
 export default App;
