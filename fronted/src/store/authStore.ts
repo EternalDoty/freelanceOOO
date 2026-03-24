@@ -29,18 +29,24 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       isBlocked: false,
-      login: (token, user, blocked = false) => set({ 
-        token, 
-        user, 
-        isAuthenticated: true,
-        isBlocked: blocked 
-      }),
-      logout: () => set({ 
-        token: null, 
-        user: null, 
-        isAuthenticated: false,
-        isBlocked: false 
-      }),
+      login: (token, user, blocked = false) => {
+        localStorage.setItem('token', token);
+        set({ 
+          token, 
+          user, 
+          isAuthenticated: true,
+          isBlocked: blocked 
+        });
+      },
+      logout: () => {
+        localStorage.removeItem('token');
+        set({ 
+          token: null, 
+          user: null, 
+          isAuthenticated: false,
+          isBlocked: false 
+        });
+      },
       updateUser: (userData) => set((state) => ({
         user: state.user ? { ...state.user, ...userData } : null
       })),
